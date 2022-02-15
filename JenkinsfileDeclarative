@@ -1,0 +1,80 @@
+pipeline{
+agent any
+tools{
+ maven 'maven3.8.4'
+ }
+triggers {
+  pollSCM '* * * * *'
+}
+
+options{
+//Discard old builds
+  buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')
+}
+
+ stages{
+ 
+//Get the code from Github
+  stage('CheckoutCode'){
+  steps{ 
+    git branch: 'development', credentialsId: '0ea2bd6e-afd1-4910-bf58-ce166987d485', 
+    url: 'https://github.com/novbatch-github-vk/maven-web-application.git'
+  }
+  }
+  
+//Do the build
+stage('Build'){
+steps{
+sh "mvn clean package"
+ }
+ }
+ 
+ //Execute SQ Report
+stage('SQReport'){
+steps{
+sh "mvn clean sonar:sonar"
+ }
+ }
+  
+ //upload Artifact into nexus
+stage('uploadArtifactintoNexus'){
+steps{
+sh "mvn clean deploy"
+ }
+ }
+ 
+ //Deploy into Tomcat
+stage('DeployAPPintoTomcat'){
+steps{
+ sshagent(['90e239fc-084d-4ab1-bfbb-907d0a03d4b8']) {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@15.206.157.66:/opt/apache-tomcat-9.0.56/webapps/"
+    }		 
+ }
+ }
+ 
+  
+ } //Stages Closing
+ 
+  post {
+  always {
+     emailext body: '''Build over....
+
+   Regards,
+   vijay k''', subject: 'Build over', to: 'vijaykotikal198@gmail.com'
+  }
+  success {
+     emailext body: '''Build over....
+
+    Regards,
+    vijay k''', subject: 'Build over', to: 'vijaykotikal198@gmail.com'
+  }
+  failure {
+    emailext body: '''Build over....
+
+    Regards,
+     vijay k''', subject: 'Build over', to: 'vijaykotikal198@gmail.com'
+  }
+  }
+  
+ } //pipeline closing
+ 
