@@ -28,7 +28,7 @@ steps{
 sh "mvn clean package"
  }
  }
- 
+/* 
  //Execute SQ Report
 stage('SQReport'){
 steps{
@@ -52,7 +52,7 @@ steps{
  }
  }
  
-  
+*/  
  } //Stages Closing
  
   post {
