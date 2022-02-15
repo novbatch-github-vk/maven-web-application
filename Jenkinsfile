@@ -10,6 +10,7 @@ stage('CheckoutCode')
 stage('Build'){
 sh "${mavenHOme}/bin/mvn clean package"
 }
+ /*   
 stage('ExecuteSQReport'){
 sh "${mavenHOme}/bin/mvn clean sonar:sonar"
 }
@@ -27,5 +28,5 @@ emailext body: '''Build over....
 Regards,
 vijay k''', subject: 'Build over', to: 'vijaykotikal198@gmail.com'
 }
-
+*/
 }
