@@ -55,26 +55,5 @@ steps{
 */  
  } //Stages Closing
  
-  post {
-  always {
-     emailext body: '''Build over....
-
-   Regards,
-   vijay k''', subject: 'Build over', to: 'vijaykotikal198@gmail.com'
-  }
-  success {
-     emailext body: '''Build over....
-
-    Regards,
-    vijay k''', subject: 'Build over', to: 'vijaykotikal198@gmail.com'
-  }
-  failure {
-    emailext body: '''Build over....
-
-    Regards,
-     vijay k''', subject: 'Build over', to: 'vijaykotikal198@gmail.com'
-  }
-  }
-  
  } //pipeline closing
  
